@@ -11,16 +11,18 @@ Options:
   -o --output=(file,stdout)     output location [default: file]
 """
 
+import re
+import sys
+
+from docopt import docopt
+
+from gl_consts import *
 from rewrite_compiler import RewriteCompiler
 from rewrite_rules.rewrite_includes import Includes
 from rewrite_rules.rewrite_layout_location_sugar import LayoutSugar
 from rewrite_rules.rewrite_newl_newl_to_newl import NewlNewl2Newl
 from rewrite_rules.rewrite_shader_splitter import ShaderSplitter
-from gl_consts import *
-import re
-
 from rewrite_rules.rewrite_version_defines import VersionToDefines
-from docopt import docopt
 
 lookup = {
     '.vert': GL_LGN_VERTEX_SHADER,
@@ -63,11 +65,15 @@ def main():
 
     location = arguments['<file>']
 
-    with open(location, 'r') as file:
-        output = compiler.rewrite_file(file.read(), location)
+    try:
+        with open(location, 'r') as file:
+            output = compiler.rewrite_file(file.read(), location)
+    except FileNotFoundError as e:
+        print(e, file=sys.stderr)
+        exit(1)
 
     if arguments['--format'] == '1file':
-        output = amalgamate(output,location)
+        output = amalgamate(output, location)
 
     for (source, location) in output:
         if arguments['--output'] == 'file':

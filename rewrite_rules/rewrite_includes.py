@@ -28,6 +28,9 @@ class Includes(RewriteBase):
             match = self.rgx.match(line)
             if match is not None:
                 location = match.group(1)
+
+                file_found = False
+
                 for include_dir in self.include_dirs:
                     test = os.path.join(include_dir, location)
                     if os.path.isfile(test) and os.path.exists(test):
@@ -38,8 +41,11 @@ class Includes(RewriteBase):
                                 [(src, _)] = self.rewrite_source(include.read(),
                                                                  merge_dicts(meta_information, {'location': test}))
                                 reconstruction += src + '\n'
-
+                                file_found = True
                         break
+
+                if not file_found:
+                    raise FileNotFoundError(f"FATAL: The include {location} was not found ")
 
             else:
                 reconstruction += line + '\n'
