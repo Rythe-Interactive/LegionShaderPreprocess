@@ -14,6 +14,6 @@ Options:
 ```
 
 TODO:
-- [ ] output file format 1file needs to be implemented
-- [ ] output location stdout needs to be implemented
+- [x] output file format 1file needs to be implemented
+- [x] output location stdout needs to be implemented
 - [ ] shader corlib needs to be fleshed out (maybe a task of legion-rendering instead?)
