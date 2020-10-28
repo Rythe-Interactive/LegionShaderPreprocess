@@ -34,6 +34,7 @@ class Includes(RewriteBase):
                 for include_dir in self.include_dirs:
                     test = os.path.join(include_dir, location)
                     if os.path.isfile(test) and os.path.exists(test):
+                        print(test)
                         if test not in already_included:
                             already_included.append(test)
                             meta_information['already_included'] = ','.join(already_included)
@@ -42,6 +43,8 @@ class Includes(RewriteBase):
                                                                  merge_dicts(meta_information, {'location': test}))
                                 reconstruction += src + '\n'
                                 file_found = True
+                        else:
+                            file_found = True
                         break
 
                 if not file_found:

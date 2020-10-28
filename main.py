@@ -2,7 +2,7 @@
 Preprocess Legion Engine Shaders into pure glsl
 
 Usage:
- lgspre <file> [-D defines ...] [-I includes ...] [options]
+ lgnspre <file> [-D defines ...] [-I includes ...] [options]
 
 Options:
   -D ...                        additional defines (use = to assign a value)
@@ -68,7 +68,7 @@ def main():
     try:
         with open(location, 'r') as file:
             output = compiler.rewrite_file(file.read(), location)
-    except FileNotFoundError as e:
+    except Exception as e:
         print(e, file=sys.stderr)
         exit(1)
 

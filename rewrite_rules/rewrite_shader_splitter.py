@@ -23,8 +23,8 @@ def to_define(current, ending):
 
 
 class ShaderSplitter(RewriteBase):
-    find_shader_keyword = re.compile(r"shader\(([A-z,\s_]+)\)")
-    find_generate_keyword = re.compile(r"generate\(([A-z,\s_]+)\)")
+    find_shader_keyword = re.compile(r"shaders?\(([A-z,\s_]+)\)")
+    find_generate_keyword = re.compile(r"generates?\(([A-z,\s_]+)\)")
 
     fault_extension = '.faulty'
 
@@ -76,7 +76,7 @@ class ShaderSplitter(RewriteBase):
 
                 # match keywords to extensions and make sure they are unique
                 active_sections = set(
-                    self.keyword_sections_pairs.get(x, self.fault_extension) for x in inner.split(','))
+                    self.keyword_sections_pairs.get(x.strip(), self.fault_extension) for x in inner.split(','))
 
                 # makes sure that this line does not get put into the output
                 continue
@@ -88,7 +88,7 @@ class ShaderSplitter(RewriteBase):
 
                 # match keywords to extensions and make sure they are unique
                 to_keep = set([self.fault_extension] +
-                              [self.keyword_sections_pairs.get(x, self.fault_extension) for x in inner.split(',')])
+                              [self.keyword_sections_pairs.get(x.strip(), self.fault_extension) for x in inner.split(',')])
 
                 # makes sure that this line does not get put into the output
                 continue

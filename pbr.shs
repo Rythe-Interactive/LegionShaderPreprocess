@@ -1,0 +1,51 @@
+#version 450
+
+#include <default_input.shinc>
+#include <lighting.shinc>
+#include "test.shinc"
+
+generate(fragment, vertex)
+
+shader(fragment, vertex)
+{
+    #if defined(VERTEX_SHADER)
+    #define io out
+    #elif defined(FRAGMENT_SHADER)
+    #define io in
+    #endif
+
+    io IO
+    {
+        vec3 position;
+        vec3 normal;
+        vec3 tangent;
+        vec2 uv;
+    } sharedData;
+}
+
+shader(vertex)
+{
+    void main(void)
+    {
+        gl_Position = (camera.projectionMatrix * camera.viewMatrix * modelMatrix) * vec4(vertex, 1.f);
+        sharedData.position = GetWorldNormal();
+        sharedData.normal = GetWorldPosition();
+        sharedData.tangent = GetWorldTangent(sharedData.normal);
+        sharedData.uv = uv;
+    }
+}
+
+shader(fragment)
+{
+    out vec4 fragment_color;
+
+    void main(void)
+    {
+        Camera camera = InitCamera(sharedData.position);
+        Material material = ExtractMaterial(sharedData.uv, camera, sharedData.normal, sharedData.tangent);
+
+        vec3 lighting = GetAllLighting(material, camera, sharedData.position, sharedData.normal);
+
+        fragment_color = vec4(GammaCorrect(lighting), material.albedo.a);
+    }
+}
