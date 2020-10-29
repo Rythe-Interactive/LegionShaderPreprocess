@@ -38,9 +38,9 @@ lookup = {
 
 
 def armorize(str):
-    s = "=========== BEGIN SHADER CODE =========== " \
-        + str \
-        + "============ END SHADER CODE ============ "
+    return "=========== BEGIN SHADER CODE ===========\n" \
+         + str \
+         + "============ END SHADER CODE ============\n"
 
 
 def amalgamate(param, filename):
