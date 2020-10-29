@@ -48,6 +48,9 @@ class ShaderSplitter(RewriteBase):
     all_valid_source_types = set(list(keyword_sections_pairs.values()))
 
     def rewrite_source(self, source: str, meta_information: Dict[str, str]) -> List[Tuple[str, Dict[str, str]]]:
+        if meta_information.get('location', '').endswith('.directives'):
+            return [(source, meta_information)]
+
         vprint1("[Splitter]  Rewriter Started!")
         vprint1(f"[Splitter] Using this dictionary:\n{self.keyword_sections_pairs}")
         # split input source into lines
@@ -94,7 +97,8 @@ class ShaderSplitter(RewriteBase):
 
                 # match keywords to extensions and make sure they are unique
                 to_keep = set([self.fault_extension] +
-                              [self.keyword_sections_pairs.get(x.strip(), self.fault_extension) for x in inner.split(',')])
+                              [self.keyword_sections_pairs.get(x.strip(), self.fault_extension) for x in
+                               inner.split(',')])
 
                 vprint2(f"[Splitter] Shaders to keep is set to {to_keep} now")
 
@@ -124,7 +128,7 @@ class ShaderSplitter(RewriteBase):
                             need_counting = False
                             commit(sources, active_sections, line)
                             active_sections = self.all_valid_source_types
-                            lines[itr - 1] = line[idx+1:]
+                            lines[itr - 1] = line[idx + 1:]
                             itr -= 1
 
                             continue

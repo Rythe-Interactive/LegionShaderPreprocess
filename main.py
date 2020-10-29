@@ -20,6 +20,7 @@ from docopt import docopt
 
 from gl_consts import *
 from rewrite_compiler import RewriteCompiler
+from rewrite_rules.rewrite_extract_directives import ExtractDirectives
 from rewrite_rules.rewrite_includes import Includes
 from rewrite_rules.rewrite_layout_location_sugar import LayoutSugar
 from rewrite_rules.rewrite_newl_newl_to_newl import NewlNewl2Newl
@@ -39,8 +40,8 @@ lookup = {
 
 def armorize(str):
     return "=========== BEGIN SHADER CODE ===========\n" \
-         + str \
-         + "============ END SHADER CODE ============\n"
+           + str \
+           + "============ END SHADER CODE ============\n"
 
 
 def amalgamate(param, filename):
@@ -74,31 +75,32 @@ def main():
 
     vprint.verbosity_level = arguments['-v']
 
-    vprint2(f"[Boostrap] Parsed Arguments:\n{arguments}")
+    vprint2(f"[Bootstrap] Parsed Arguments:\n{arguments}")
 
-    rewriters = [Includes(arguments['-I']), ShaderSplitter(), VersionToDefines([eq_split(x) for x in arguments['-D']]),
+    rewriters = [Includes(arguments['-I']), ExtractDirectives(), ShaderSplitter(),
+                 VersionToDefines([eq_split(x) for x in arguments['-D']]),
                  LayoutSugar(), NewlNewl2Newl()]
 
-    vprint2(f"[Boostrap] Created Pipeline:\n{rewriters}")
+    vprint2(f"[Bootstrap] Created Pipeline:\n{rewriters}")
 
-    vprint1(f"[Boostrap] Making Compiler")
+    vprint1(f"[Bootstrap] Making Compiler")
 
     compiler = RewriteCompiler(rewriters)
 
     location = arguments['<file>']
 
-    try:
-        with open(location, 'r') as file:
-            vprint2(f"[Boostrap] Loading {location}")
-            output = compiler.rewrite_file(file.read(), location)
-            vprint1(f"[Boostrap] Ran Compiler, parsing results")
+    #try:
+    with open(location, 'r') as file:
+        vprint2(f"[Bootstrap] Loading {location}")
+        output = compiler.rewrite_file(file.read(), location)
+        vprint1(f"[Bootstrap] Ran Compiler, parsing results")
 
-    except Exception as e:
-        vprint0(e, file=sys.stderr)
-        exit(1)
+    #except Exception as e:
+    #    vprint0(e, file=sys.stderr)
+    #    exit(1)
 
     if arguments['--format'] == '1file':
-        vprint2(f"[Boostrap] Amalgamating Output")
+        vprint2(f"[Bootstrap] Amalgamating Output")
         output = amalgamate(output, location)
 
     for (source, location) in output:
