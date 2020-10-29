@@ -3,11 +3,10 @@
 
 generate(vertex, geometry, fragment)
 
-shader(vertex, geometry, fragment)
-{
-    #include <math_ext.shinc>
-    #include "test.shinc"
-}
+
+#include <math_ext.shinc>
+#include "test.shinc"
+
 
 shader(vertex)
 {

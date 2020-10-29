@@ -1,5 +1,7 @@
+from typing import List, Tuple
+
 from rewrite_rules.rewrite_base import RewriteBase
-from typing import List, NoReturn, Tuple
+from vprint import vprint1, vprint3
 
 
 class RewriteCompiler:
@@ -16,17 +18,20 @@ class RewriteCompiler:
         :param location: The file location of the source-file
         :return: new sources + locations
         """
-
+        vprint1("[Compiler] Started Rewriting")
         # generate workspace
         workspaces = [(source, {'location': location})]
 
         # run all re-writers over the source
         for rewriter in self.rewriters:
-
+            vprint1(f"[Compiler] Current Rewrite Module:{rewriter}")
             accumulator = []
+
 
             for (source, meta) in workspaces:
                 accumulator += rewriter.rewrite_source(source, meta)
+
+            vprint3(f"[Compiler] Accumulator after Rewrite from {rewriter}:\n{accumulator}")
 
             workspaces = accumulator
 
@@ -36,7 +41,7 @@ class RewriteCompiler:
         for (source, meta) in workspaces:
 
             if 'location' not in meta:
-                print('Warning! Source without location encountered, skipped!')
+                vprint1('Warning! Source without location encountered, skipped!')
                 continue
 
             ret += [(source, meta['location'])]

@@ -4,10 +4,12 @@ from typing import Dict, List, Tuple
 from rewrite_rules.rewrite_base import RewriteBase
 import re
 
+from vprint import vprint1, vprint2
+
 
 def commit(sources, sections, line):
     for section in sections:
-        sources[section] += line + '\n'
+        sources[section] += line.rstrip() + '\n'
 
 
 def to_define(current, ending):
@@ -46,7 +48,8 @@ class ShaderSplitter(RewriteBase):
     all_valid_source_types = set(list(keyword_sections_pairs.values()))
 
     def rewrite_source(self, source: str, meta_information: Dict[str, str]) -> List[Tuple[str, Dict[str, str]]]:
-
+        vprint1("[Splitter]  Rewriter Started!")
+        vprint1(f"[Splitter] Using this dictionary:\n{self.keyword_sections_pairs}")
         # split input source into lines
         lines = source.splitlines()
 
@@ -70,6 +73,7 @@ class ShaderSplitter(RewriteBase):
             # check for 'shader(<...>)' keyword
             matches = self.find_shader_keyword.match(line.strip())
             if matches is not None and not need_counting:
+                vprint1("[Splitter] Encountered shader kw")
                 brace_counter = 1 if line.find('{') != -1 else 0
                 need_counting = True
                 inner = matches.group(1)
@@ -77,18 +81,22 @@ class ShaderSplitter(RewriteBase):
                 # match keywords to extensions and make sure they are unique
                 active_sections = set(
                     self.keyword_sections_pairs.get(x.strip(), self.fault_extension) for x in inner.split(','))
-
+                vprint2(f"[Splitter] Active sections are {active_sections} now")
                 # makes sure that this line does not get put into the output
                 continue
 
             # check for 'generate(<...>)' keyword
             matches = self.find_generate_keyword.match(line.strip())
             if matches is not None:
+                vprint1("[Splitter] Encountered generate kw")
+
                 inner = matches.group(1)
 
                 # match keywords to extensions and make sure they are unique
                 to_keep = set([self.fault_extension] +
                               [self.keyword_sections_pairs.get(x.strip(), self.fault_extension) for x in inner.split(',')])
+
+                vprint2(f"[Splitter] Shaders to keep is set to {to_keep} now")
 
                 # makes sure that this line does not get put into the output
                 continue
@@ -96,6 +104,7 @@ class ShaderSplitter(RewriteBase):
             # check if wee need to count braces
             if need_counting and (line.find('{') != -1 or line.find('}') != -1):
 
+                vprint2(f"[Splitter] Counting braces! brace counter is at:{brace_counter}")
                 # swap temp and line
                 temp = line
                 line = ''
@@ -126,6 +135,7 @@ class ShaderSplitter(RewriteBase):
 
         res = []
 
+        vprint1("[Splitter] Discarding sections I do not need")
         for keeper in to_keep:
             if sources[keeper] == '':
                 continue
