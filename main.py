@@ -89,15 +89,15 @@ def main():
 
     location = arguments['<file>']
 
-    #try:
-    with open(location, 'r') as file:
-        vprint2(f"[Bootstrap] Loading {location}")
-        output = compiler.rewrite_file(file.read(), location)
-        vprint1(f"[Bootstrap] Ran Compiler, parsing results")
+    try:
+        with open(location, 'r') as file:
+            vprint2(f"[Bootstrap] Loading {location}")
+            output = compiler.rewrite_file(file.read(), location)
+            vprint1(f"[Bootstrap] Ran Compiler, parsing results")
 
-    #except Exception as e:
-    #    vprint0(e, file=sys.stderr)
-    #    exit(1)
+    except Exception as e:
+        vprint0(e, file=sys.stderr)
+        sys.exit(1)
 
     if arguments['--format'] == '1file':
         vprint2(f"[Bootstrap] Amalgamating Output")

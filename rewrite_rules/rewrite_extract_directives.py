@@ -12,7 +12,7 @@ class ExtractDirectives(RewriteBase):
     def rewrite_source(self, source: str, meta_information: Dict[str, str]) -> List[Tuple[str, Dict[str, str]]]:
 
         reconstruction = ''
-        directives = 'states\n'
+        directives = ''
         directives_meta = deepcopy(meta_information)
         directives_meta['location'] = meta_information['location'] + '.directives'
 
