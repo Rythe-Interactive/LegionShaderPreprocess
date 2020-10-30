@@ -2,7 +2,7 @@
 Preprocess Legion Engine Shaders into pure glsl
 
 Usage:
- lgnspre <file> [-D defines ...] [-I includes ...] [options] [-v | -vv | -vvv]
+ lgnspre <file>... [-D defines ...] [-I includes ...] [options] [-v | -vv | -vvv]
 
 Options:
   -D ...                        additional defines (use = to assign a value)
@@ -14,10 +14,10 @@ Options:
 
 import re
 import sys
-from pprint import pprint
 
 from docopt import docopt
 
+import vprint
 from gl_consts import *
 from rewrite_compiler import RewriteCompiler
 from rewrite_rules.rewrite_extract_directives import ExtractDirectives
@@ -26,7 +26,6 @@ from rewrite_rules.rewrite_layout_location_sugar import LayoutSugar
 from rewrite_rules.rewrite_newl_newl_to_newl import NewlNewl2Newl
 from rewrite_rules.rewrite_shader_splitter import ShaderSplitter
 from rewrite_rules.rewrite_version_defines import VersionToDefines
-import vprint
 from vprint import vprint0, vprint1, vprint2
 
 lookup = {
@@ -65,30 +64,7 @@ def eq_split(s):
     else:
         return s, ''
 
-
-version = "Legion Shader Preprocessor v0.1.0 Alpha 3"
-
-
-def main():
-    vprint1(f"[Bootstrap] Application Started: {version}")
-    arguments = docopt(__doc__, version=version)
-
-    vprint.verbosity_level = arguments['-v']
-
-    vprint2(f"[Bootstrap] Parsed Arguments:\n{arguments}")
-
-    rewriters = [Includes(arguments['-I']), ExtractDirectives(), ShaderSplitter(),
-                 VersionToDefines([eq_split(x) for x in arguments['-D']]),
-                 LayoutSugar(), NewlNewl2Newl()]
-
-    vprint2(f"[Bootstrap] Created Pipeline:\n{rewriters}")
-
-    vprint1(f"[Bootstrap] Making Compiler")
-
-    compiler = RewriteCompiler(rewriters)
-
-    location = arguments['<file>']
-
+def do_compile(location,format,output_type,compiler):
     try:
         with open(location, 'r') as file:
             vprint2(f"[Bootstrap] Loading {location}")
@@ -99,20 +75,49 @@ def main():
         vprint0(e, file=sys.stderr)
         sys.exit(1)
 
-    if arguments['--format'] == '1file':
+    if format == '1file':
         vprint2(f"[Bootstrap] Amalgamating Output")
         output = amalgamate(output, location)
 
     for (source, location) in output:
-        if arguments['--output'] == 'file':
+        if output_type == 'file':
             with open(location, 'w') as outfile:
                 vprint2(f"[Boostrap] Writing {location}")
                 outfile.write(source)
         else:
-            if arguments['--format'] != '1file':
+            if format != '1file':
                 print(f"NAME:{location}")
             print(armorize(source))
 
+
+version = "Legion Shader Preprocessor v0.3.0 Alpha 4"
+
+
+def main():
+    vprint1(f"[Bootstrap] Application Started: {version}")
+    arguments = docopt(__doc__, version=version)
+
+    vprint.verbosity_level = arguments['-v']
+
+    vprint2(f"[Bootstrap] Parsed Arguments:\n{arguments}")
+
+    rewriters = [
+        Includes(arguments['-I']),
+        ExtractDirectives(),
+        ShaderSplitter(),
+        VersionToDefines([eq_split(x) for x in arguments['-D']]),
+        LayoutSugar(),
+        NewlNewl2Newl()
+    ]
+
+    vprint2(f"[Bootstrap] Created Pipeline:\n{rewriters}")
+
+    vprint1(f"[Bootstrap] Making Compiler")
+
+    compiler = RewriteCompiler(rewriters)
+
+    for location in arguments['<file>']:
+        do_compile(location,arguments['--format'],arguments['--output'],compiler)
 
 if __name__ == '__main__':
     main()
