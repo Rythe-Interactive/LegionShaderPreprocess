@@ -12,6 +12,8 @@ Options:
   -v                            verbose output level
 """
 
+version = "Legion Shader Preprocessor v0.3.0 Alpha 5"
+
 import re
 import sys
 
@@ -89,8 +91,6 @@ def do_compile(location,format,output_type,compiler):
                 print(f"NAME:{location}")
             print(armorize(source))
 
-
-version = "Legion Shader Preprocessor v0.3.0 Alpha 4"
 
 
 def main():
