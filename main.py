@@ -24,6 +24,7 @@ from gl_consts import *
 from rewrite_compiler import RewriteCompiler
 from rewrite_rules.rewrite_extract_directives import ExtractDirectives
 from rewrite_rules.rewrite_includes import Includes
+from rewrite_rules.rewrite_active_shader_defines import ActiveShaderDefines
 from rewrite_rules.rewrite_layout_location_sugar import LayoutSugar
 from rewrite_rules.rewrite_geometry_input import GeometryInput
 from rewrite_rules.rewrite_auto_location import LocationAuto
@@ -105,11 +106,12 @@ def main():
 
     rewriters = [
         Includes(arguments['-I']),
+        ActiveShaderDefines(),
         ExtractDirectives(),
         ShaderSplitter(),
+        GeometryInput(),
         VersionToDefines([eq_split(x) for x in arguments['-D']]),
         LayoutSugar(),
-        GeometryInput(),
         LocationAuto(),
         NewlNewl2Newl()
     ]

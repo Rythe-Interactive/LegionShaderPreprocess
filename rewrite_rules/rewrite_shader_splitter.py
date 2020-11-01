@@ -146,7 +146,7 @@ class ShaderSplitter(RewriteBase):
             meta = deepcopy(meta_information)
             meta['location'] = meta.get('location', 'error') + keeper
             defs = meta.setdefault('extra_defines', '')
-            meta['extra_defines'] += (to_define(defs, keeper))
+            meta['extra_defines'] = (to_define(defs, keeper))
             res += [(sources[keeper], meta)]
 
         return res

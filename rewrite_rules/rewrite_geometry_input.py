@@ -1,5 +1,6 @@
 import re
 from typing import Dict, List, Tuple
+from copy import deepcopy
 
 from rewrite_rules.rewrite_base import RewriteBase
 from vprint import vprint1
@@ -8,8 +9,8 @@ from vprint import vprint1
 class GeometryInput(RewriteBase):
     rgx_input = re.compile(r"geometry_input\s*\(\s*([^\s][^,\s]*[^\s,)])\s*([,]?[^\)]*)\s*\)")
     rgx_output = re.compile(r"geometry_output\s*\(\s*([^\s][^\)]*[^\s])\s*(\))")
-
-    pattern_input = r"layout(\1\2) in;\n#define __geom_in_\1\n#define __geom_vtxc "
+    extradefines = []
+    pattern_input = r"layout(\1\2) in;"
     pattern_output = r"layout(\1) out;"
     vtxc = {
         "points": '1\n',
@@ -20,9 +21,13 @@ class GeometryInput(RewriteBase):
         }
 
     def rewrite_input_match(self, match):
-        return match.expand(self.pattern_input + self.vtxc.get(match.group(1), ''))
+        self.extradefines += ["_L_geom_in_" + match.group(1)] + ["_L_geom_vtxc " + self.vtxc.get(match.group(1), '3')]
+        return match.expand(self.pattern_input)
 
     def rewrite_source(self, source: str, meta_information: Dict[str, str]) -> List[Tuple[str, Dict[str, str]]]:
         vprint1("[Geometry-Input] Rewriter started!")
-        ret = self.rgx_output.sub(self.pattern_output, source)
-        return [(self.rgx_input.sub(self.rewrite_input_match, ret), meta_information)]
+        ret = self.rgx_input.sub(self.rewrite_input_match, source)
+        meta = deepcopy(meta_information)
+        defs = meta.setdefault('extra_defines', '')
+        meta['extra_defines'] = ','.join(list(filter(None, defs.split(',') + self.extradefines)))
+        return [(self.rgx_output.sub(self.pattern_output, ret), meta)]
