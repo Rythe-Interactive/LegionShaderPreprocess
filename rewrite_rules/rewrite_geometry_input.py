@@ -6,8 +6,8 @@ from vprint import vprint1
 
 
 class GeometryInput(RewriteBase):
-    rgx_input = re.compile(r"geometry_input\s*\(\s*([^\s][^,\s]*[^\s,])\s*([,]?.*)\s*\)")
-    rgx_output = re.compile(r"geometry_output\s*\(\s*([^\s].*[^\s])\s*\)")
+    rgx_input = re.compile(r"geometry_input\s*\(\s*([^\s][^,\s]*[^\s,)])\s*([,]?[^\)]*)\s*\)")
+    rgx_output = re.compile(r"geometry_output\s*\(\s*([^\s][^\)]*[^\s])\s*(\))")
 
     pattern_input = r"layout(\1\2) in;\n#define __geom_in_\1\n#define __geom_vtxc "
     pattern_output = r"layout(\1) out;"
