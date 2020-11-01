@@ -25,6 +25,7 @@ from rewrite_compiler import RewriteCompiler
 from rewrite_rules.rewrite_extract_directives import ExtractDirectives
 from rewrite_rules.rewrite_includes import Includes
 from rewrite_rules.rewrite_layout_location_sugar import LayoutSugar
+from rewrite_rules.rewrite_geometry_input import GeometryInput
 from rewrite_rules.rewrite_auto_location import LocationAuto
 from rewrite_rules.rewrite_newl_newl_to_newl import NewlNewl2Newl
 from rewrite_rules.rewrite_shader_splitter import ShaderSplitter
@@ -108,6 +109,7 @@ def main():
         ShaderSplitter(),
         VersionToDefines([eq_split(x) for x in arguments['-D']]),
         LayoutSugar(),
+        GeometryInput(),
         LocationAuto(),
         NewlNewl2Newl()
     ]
