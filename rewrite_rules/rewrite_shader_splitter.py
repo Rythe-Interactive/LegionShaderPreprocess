@@ -1,6 +1,7 @@
 from copy import deepcopy
 from typing import Dict, List, Tuple
 
+from common.str_list_util import dict_str_list_append
 from rewrite_rules.rewrite_base import RewriteBase
 import re
 
@@ -12,7 +13,7 @@ def commit(sources, sections, line):
         sources[section] += line.rstrip() + '\n'
 
 
-def to_define(current, ending):
+def to_define(ending):
     lut = {
         '.vert': 'VERTEX_SHADER',
         '.frag': 'FRAGMENT_SHADER',
@@ -21,7 +22,7 @@ def to_define(current, ending):
         '.tess-e': 'TESSELATION_EVALUATE_SHADER',
         '.faulty': 'SHADER_FAULTY'
     }
-    return ','.join(list(filter(None, current.split(',') + [lut[ending]])))
+    return lut[ending]
 
 
 class ShaderSplitter(RewriteBase):
@@ -145,8 +146,9 @@ class ShaderSplitter(RewriteBase):
                 continue
             meta = deepcopy(meta_information)
             meta['location'] = meta.get('location', 'error') + keeper
-            defs = meta.setdefault('extra_defines', '')
-            meta['extra_defines'] = (to_define(defs, keeper))
+
+            dict_str_list_append(meta, 'extra_defines', to_define(keeper))
+
             res += [(sources[keeper], meta)]
 
         return res

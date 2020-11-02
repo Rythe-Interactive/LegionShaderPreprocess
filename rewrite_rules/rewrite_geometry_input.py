@@ -2,6 +2,7 @@ import re
 from typing import Dict, List, Tuple
 from copy import deepcopy
 
+from common.str_list_util import dict_str_list_append
 from rewrite_rules.rewrite_base import RewriteBase
 from vprint import vprint1
 
@@ -18,7 +19,7 @@ class GeometryInput(RewriteBase):
         "lines_adjacency": '4\n',
         "triangles": '3\n',
         "triangles_adjacency": '6\n'
-        }
+    }
 
     def rewrite_input_match(self, match):
         self.extradefines += ["_L_geom_in_" + match.group(1)] + ["_L_geom_vtxc " + self.vtxc.get(match.group(1), '3')]
@@ -26,8 +27,10 @@ class GeometryInput(RewriteBase):
 
     def rewrite_source(self, source: str, meta_information: Dict[str, str]) -> List[Tuple[str, Dict[str, str]]]:
         vprint1("[Geometry-Input] Rewriter started!")
+
         ret = self.rgx_input.sub(self.rewrite_input_match, source)
         meta = deepcopy(meta_information)
-        defs = meta.setdefault('extra_defines', '')
-        meta['extra_defines'] = ','.join(list(filter(None, defs.split(',') + self.extradefines)))
+
+        dict_str_list_append(meta, 'extra_defines', self.extradefines)
+
         return [(self.rgx_output.sub(self.pattern_output, ret), meta)]
