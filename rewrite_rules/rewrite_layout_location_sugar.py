@@ -6,8 +6,8 @@ from vprint import vprint1
 
 
 class LayoutSugar(RewriteBase):
-    rgx = re.compile(r"((?:in|out|uniform)\s+[A-z\_][A-z0-9_\s]*)\s*:\s*(.+)")
-    pattern = r"layout(location=\2) \1;"
+    rgx = re.compile(r"((?:in|out|uniform)\s+[A-z\_][A-z0-9_\s]*)\s*:\s*([^\n;]+)([;]?)")
+    pattern = r"layout(location=\2) \1\3"
 
     def rewrite_source(self, source: str, meta_information: Dict[str, str]) -> List[Tuple[str, Dict[str, str]]]:
         vprint1("[Sugar-Layout] Rewriter started!")

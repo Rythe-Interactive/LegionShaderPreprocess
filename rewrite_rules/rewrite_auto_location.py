@@ -6,8 +6,8 @@ from vprint import vprint1
 
 
 class LocationAuto(RewriteBase):
-    rgx = re.compile(r"layout\((location\s*=\s*auto\s*,?)\s*(.*)\)")
-    pattern = r"layout(\2);"
+    rgx = re.compile(r"layout\((location\s*=\s*auto\s*,?)\s*(.*)\)([^;\n]+)([;]?)")
+    pattern = r"layout(\2)\3\4"
 
     def rewrite_source(self, source: str, meta_information: Dict[str, str]) -> List[Tuple[str, Dict[str, str]]]:
         vprint1("[Location-Auto] Rewriter started!")

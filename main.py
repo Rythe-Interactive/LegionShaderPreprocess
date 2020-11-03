@@ -22,13 +22,7 @@ from docopt import docopt
 import vprint
 from gl_consts import *
 from rewrite_compiler import RewriteCompiler
-from rewrite_rules.rewrite_extract_directives import ExtractDirectives
-from rewrite_rules.rewrite_includes import Includes
-from rewrite_rules.rewrite_layout_location_sugar import LayoutSugar
-from rewrite_rules.rewrite_auto_location import LocationAuto
-from rewrite_rules.rewrite_newl_newl_to_newl import NewlNewl2Newl
-from rewrite_rules.rewrite_shader_splitter import ShaderSplitter
-from rewrite_rules.rewrite_version_defines import VersionToDefines
+from rewrite_rules import *
 from vprint import vprint0, vprint1, vprint2
 
 lookup = {
@@ -67,7 +61,8 @@ def eq_split(s):
     else:
         return s, ''
 
-def do_compile(location,format,output_type,compiler):
+
+def do_compile(location, format, output_type, compiler):
     try:
         with open(location, 'r') as file:
             vprint2(f"[Bootstrap] Loading {location}")
@@ -93,7 +88,6 @@ def do_compile(location,format,output_type,compiler):
             print(armorize(source))
 
 
-
 def main():
     vprint1(f"[Bootstrap] Application Started: {version}")
     arguments = docopt(__doc__, version=version)
@@ -102,24 +96,27 @@ def main():
 
     vprint2(f"[Bootstrap] Parsed Arguments:\n{arguments}")
 
-    rewriters = [
+    pipeline = [
         Includes(arguments['-I']),
+        ActiveShaderDefines(),
         ExtractDirectives(),
         ShaderSplitter(),
+        GeometryInput(),
         VersionToDefines([eq_split(x) for x in arguments['-D']]),
         LayoutSugar(),
         LocationAuto(),
         NewlNewl2Newl()
     ]
 
-    vprint2(f"[Bootstrap] Created Pipeline:\n{rewriters}")
+    vprint2(f"[Bootstrap] Created Pipeline:\n{pipeline}")
 
     vprint1(f"[Bootstrap] Making Compiler")
 
-    compiler = RewriteCompiler(rewriters)
+    compiler = RewriteCompiler(pipeline)
 
     for location in arguments['<file>']:
-        do_compile(location,arguments['--format'],arguments['--output'],compiler)
+        do_compile(location, arguments['--format'], arguments['--output'], compiler)
+
 
 if __name__ == '__main__':
     main()
