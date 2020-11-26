@@ -7,6 +7,7 @@ from .rewrite_layout_location_sugar import *
 from .rewrite_newl_newl_to_newl import *
 from .rewrite_shader_splitter import *
 from .rewrite_version_defines import *
+from .rewrite_indents import *
 
 __all__ = [
     "ActiveShaderDefines",
@@ -17,5 +18,6 @@ __all__ = [
     "LayoutSugar",
     "NewlNewl2Newl",
     "ShaderSplitter",
-    "VersionToDefines"
+    "VersionToDefines",
+    "Indents"
 ]

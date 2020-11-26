@@ -63,15 +63,15 @@ def eq_split(s):
 
 
 def do_compile(location, format, output_type, compiler):
-    try:
-        with open(location, 'r') as file:
-            vprint2(f"[Bootstrap] Loading {location}")
-            output = compiler.rewrite_file(file.read(), location)
-            vprint1(f"[Bootstrap] Ran Compiler, parsing results")
+    #try:
+    with open(location, 'r') as file:
+        vprint2(f"[Bootstrap] Loading {location}")
+        output = compiler.rewrite_file(file.read(), location)
+        vprint1(f"[Bootstrap] Ran Compiler, parsing results")
 
-    except Exception as e:
-        vprint0(e, file=sys.stderr)
-        sys.exit(1)
+    #except Exception as e:
+        #vprint0(e, file=sys.stderr)
+        #sys.exit(1)
 
     if format == '1file':
         vprint2(f"[Bootstrap] Amalgamating Output")
@@ -105,7 +105,8 @@ def main():
         VersionToDefines([eq_split(x) for x in arguments['-D']]),
         LayoutSugar(),
         LocationAuto(),
-        NewlNewl2Newl()
+        NewlNewl2Newl(),
+        Indents()
     ]
 
     vprint2(f"[Bootstrap] Created Pipeline:\n{pipeline}")
