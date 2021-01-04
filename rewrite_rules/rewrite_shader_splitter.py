@@ -78,7 +78,7 @@ class ShaderSplitter(RewriteBase):
             matches = self.find_shader_keyword.match(line.strip())
             if matches is not None and not need_counting:
                 vprint1("[Splitter] Encountered shader kw")
-                brace_counter = 1 if line.find('{') != -1 else 0
+                brace_counter = line.count('{')
                 need_counting = True
                 inner = matches.group(1)
 
