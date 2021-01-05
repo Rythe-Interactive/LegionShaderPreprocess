@@ -2,7 +2,7 @@ import re
 from typing import Dict, List, Tuple
 from copy import deepcopy
 
-from common.str_list_util import dict_str_list_append
+from common.str_list_util import dict_str_list_append_list
 from rewrite_rules.rewrite_base import RewriteBase
 from vprint import vprint1
 
@@ -22,7 +22,7 @@ class GeometryInput(RewriteBase):
     }
 
     def rewrite_input_match(self, match):
-        self.extradefines += ["_L_geom_in_" + match.group(1)] + ["_L_geom_vtxc " + self.vtxc.get(match.group(1), '3')]
+        self.extradefines += ["LGN_geom_in_" + match.group(1)] + ["LGN_geom_vtxc " + self.vtxc.get(match.group(1), '3')]
         return match.expand(self.pattern_input)
 
     def rewrite_source(self, source: str, meta_information: Dict[str, str]) -> List[Tuple[str, Dict[str, str]]]:
@@ -31,6 +31,6 @@ class GeometryInput(RewriteBase):
         ret = self.rgx_input.sub(self.rewrite_input_match, source)
         meta = deepcopy(meta_information)
 
-        dict_str_list_append(meta, 'extra_defines', self.extradefines)
+        dict_str_list_append_list(meta, 'extra_defines', self.extradefines)
 
         return [(self.rgx_output.sub(self.pattern_output, ret), meta)]
