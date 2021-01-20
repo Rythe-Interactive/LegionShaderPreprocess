@@ -26,7 +26,7 @@ class Variant(RewriteBase):
             # check if variant keyword was mentioned
             matches = self.matcher.match(line)
             if matches is not None:
-                active_variants = [v.strip() for v in matches.group(1).split(',')]
+                active_variants = [v.strip().replace(' ', '_') for v in matches.group(1).split(',')]
                 vprint2("[Variants] New Active Variants: ", active_variants)
                 for v in active_variants:
                     if v not in sources:
