@@ -7,7 +7,7 @@
   },
   {
    "optionDest": "filenames",
-   "value": "H:/repositories/shader_compiler/main.py"
+   "value": "I:/Engine Minor/LegionShaderPreprocess/main.py"
   },
   {
    "optionDest": "onefile",
@@ -19,7 +19,7 @@
   },
   {
    "optionDest": "icon_file",
-   "value": "H:/repositories/shader_compiler/icon.ico"
+   "value": "I:/Engine Minor/LegionShaderPreprocess/icon.ico"
   },
   {
    "optionDest": "name",
@@ -63,11 +63,11 @@
   },
   {
    "optionDest": "datas",
-   "value": "H:/repositories/shader_compiler/LICENSE.MIT;."
+   "value": "I:/Engine Minor/LegionShaderPreprocess/LICENSE.MIT;."
   },
   {
    "optionDest": "datas",
-   "value": "H:/repositories/shader_compiler/README.md;."
+   "value": "I:/Engine Minor/LegionShaderPreprocess/README.md;."
   }
  ],
  "nonPyinstallerOptions": {

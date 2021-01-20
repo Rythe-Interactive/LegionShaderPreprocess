@@ -6,7 +6,7 @@ import re
 from vprint import vprint1, vprint2
 
 class Variant(RewriteBase):
-    matcher = re.compile(r"\s*variant\s*\(([A-z_][A-z0-9_,]+)\)")
+    matcher = re.compile(r"\s*variant\s*\(([A-z_][A-z0-9_,\s]+)\)")
 
     def rewrite_source(self, source: str, meta_information: Dict[str, str]) -> List[Tuple[str, Dict[str, str]]]:
         vprint1("[Variants] Rewriter started!")
@@ -26,11 +26,11 @@ class Variant(RewriteBase):
             # check if variant keyword was mentioned
             matches = self.matcher.match(line)
             if matches is not None:
-                active_variants = matches.group(1).split(',')
-                vprint2("New Active Variant: ",active_variants)
+                active_variants = [v.strip() for v in matches.group(1).split(',')]
+                vprint2("[Variants] New Active Variants: ", active_variants)
                 for v in active_variants:
                     if v not in sources:
-                        sources[v] =  sources['default']
+                        sources[v] = sources['default']
 
                 if '{' not in line:
                     delete_next_curly_open = True
@@ -51,7 +51,7 @@ class Variant(RewriteBase):
                     new_dict[k] = v + line
                 sources = new_dict
             else:
-                vprint2("Adding something to ", active_variants)
+                vprint2("[Variants] Adding something to ", active_variants)
                 bc += line.count('{')
                 tmp = bc
 
@@ -80,14 +80,14 @@ class Variant(RewriteBase):
 
         table = []
 
-        vprint2(sources)
+        vprint2("[Variants] sources: ", sources)
 
         for k, v in sources.items():
             if k == "default":
-                table += [(v, meta_information)]
+                table += [(k + '\n' + v, meta_information)]
             else:
                 meta = deepcopy(meta_information)
                 meta['location'] = base_name[0] + "." +k +"." + base_name[1]
-                table += [(v, meta)]
+                table += [(k + '\n' + v, meta)]
 
         return table
