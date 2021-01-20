@@ -40,7 +40,7 @@ class Variant(RewriteBase):
 
             if active_variants is None:
                 new_dict = {}
-                for k, v in sources:
+                for k, v in sources.items():
                     new_dict[k] = v + line
                 sources = new_dict
             else:
@@ -54,7 +54,7 @@ class Variant(RewriteBase):
                     closing_for_everyone = '}' * -bc
                     new_dict = {}
 
-                    for k, v in sources:
+                    for k, v in sources.items():
                         new_dict[k] = v + closing_for_everyone
                         if k in active_variants:
                             new_dict[k] += closing_for_active_variants
@@ -72,7 +72,7 @@ class Variant(RewriteBase):
 
         table = []
 
-        for k, v in sources:
+        for k, v in sources.items():
             if k == "default":
                 table += [(v, meta_information)]
             else:
