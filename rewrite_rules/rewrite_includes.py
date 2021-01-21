@@ -2,8 +2,10 @@ import os
 import re
 from typing import Dict, List, Tuple
 
+from common.sha1mark import sha1mark
 from rewrite_rules.rewrite_base import RewriteBase
 from vprint import vprint1, vprint2
+
 
 def merge_dicts(d1, d2):
     z = d1.copy()
@@ -48,11 +50,13 @@ class Includes(RewriteBase):
                             meta_information['already_included'] = ','.join(already_included)
                             with open(test) as include:
                                 vprint2("[Include] Candidate opened")
-                                [(src, _)] = self.rewrite_source(include.read(),
+                                contents = include.read()
+                                marker = sha1mark(contents, test)
+                                [(src, _)] = self.rewrite_source(contents,
                                                                  merge_dicts(meta_information, {'location': test}))
 
                                 vprint2("[Include] candidate parsed!")
-                                reconstruction += src + '\n'
+                                reconstruction += marker + '\n' + src + '\n'
                                 file_found = True
                         else:
                             vprint1("[Include] Candidate was ignored because it was already included")
