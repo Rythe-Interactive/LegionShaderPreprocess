@@ -8,6 +8,7 @@ from .rewrite_newl_newl_to_newl import *
 from .rewrite_shader_splitter import *
 from .rewrite_version_defines import *
 from .rewrite_indents import *
+from .rewrite_variants import *
 
 __all__ = [
     "ActiveShaderDefines",
@@ -19,5 +20,6 @@ __all__ = [
     "NewlNewl2Newl",
     "ShaderSplitter",
     "VersionToDefines",
-    "Indents"
+    "Indents",
+    "Variant"
 ]

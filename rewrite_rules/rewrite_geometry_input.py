@@ -22,7 +22,7 @@ class GeometryInput(RewriteBase):
     }
 
     def rewrite_input_match(self, match):
-        self.extradefines += ["_L_geom_in_" + match.group(1)] + ["_L_geom_vtxc " + self.vtxc.get(match.group(1), '3')]
+        self.extradefines += ["LGN_geom_in_" + match.group(1)] + ["LGN_geom_vtxc " + self.vtxc.get(match.group(1), '3')]
         return match.expand(self.pattern_input)
 
     def rewrite_source(self, source: str, meta_information: Dict[str, str]) -> List[Tuple[str, Dict[str, str]]]:
