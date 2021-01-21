@@ -9,6 +9,7 @@ from .rewrite_shader_splitter import *
 from .rewrite_version_defines import *
 from .rewrite_indents import *
 from .rewrite_variants import *
+from .rewrite_add_shamarker import *
 
 __all__ = [
     "ActiveShaderDefines",
@@ -21,5 +22,6 @@ __all__ = [
     "ShaderSplitter",
     "VersionToDefines",
     "Indents",
-    "Variant"
+    "Variant",
+    "AddShaMarker"
 ]

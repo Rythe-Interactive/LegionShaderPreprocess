@@ -97,6 +97,7 @@ def main():
     vprint2(f"[Bootstrap] Parsed Arguments:\n{arguments}")
 
     pipeline = [
+        AddShaMarker(),
         Includes(arguments['-I']),
         ActiveShaderDefines(),
         Variant(),
