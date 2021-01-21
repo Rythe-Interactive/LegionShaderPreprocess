@@ -1,0 +1,1 @@
+start pyinstaller --distpath "./output/" --noconfirm --onefile --console --icon "./icon.ico" --name "lgnspre" --add-data "./LICENSE.MIT;." --add-data "./README.md;."  "./main.py"
