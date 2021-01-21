@@ -1,0 +1,15 @@
+
+#state FAKE off
+
+variant(depth_pass){
+#state FAKER off
+}
+
+generate(vertex);
+
+shader(vertex) {
+    void main()
+    {
+        // do nothing
+    }
+}

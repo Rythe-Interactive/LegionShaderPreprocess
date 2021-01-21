@@ -99,16 +99,15 @@ def main():
     pipeline = [
         Includes(arguments['-I']),
         ActiveShaderDefines(),
+        Variant(),
         ExtractDirectives(),
         ShaderSplitter(),
         GeometryInput(),
         VersionToDefines([eq_split(x) for x in arguments['-D']]),
         LayoutSugar(),
         LocationAuto(),
-        Variant(),
         NewlNewl2Newl(),
         Indents()
-
     ]
 
     vprint2(f"[Bootstrap] Created Pipeline:\n{pipeline}")
