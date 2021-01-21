@@ -34,6 +34,7 @@ class Variant(RewriteBase):
 
                 if '{' not in line:
                     delete_next_curly_open = True
+                else:
                     bc = 1
 
                 # this should not end up in the shaders
@@ -46,11 +47,14 @@ class Variant(RewriteBase):
 
 
             if active_variants is None:
+                vprint2("[Variants] Without active variant")
+                vprint2(line)
                 new_dict = {}
                 for k, v in sources.items():
                     new_dict[k] = v + line
                 sources = new_dict
             else:
+                vprint2(line)
                 vprint2("[Variants] Adding something to ", active_variants)
                 bc += line.count('{')
                 tmp = bc
@@ -84,10 +88,10 @@ class Variant(RewriteBase):
 
         for k, v in sources.items():
             if k == "default":
-                table += [(k + '\n' + v, meta_information)]
+                table += [(v, meta_information)]
             else:
                 meta = deepcopy(meta_information)
                 meta['location'] = base_name[0] + "." +k +"." + base_name[1]
-                table += [(k + '\n' + v, meta)]
+                table += [(v, meta)]
 
         return table
