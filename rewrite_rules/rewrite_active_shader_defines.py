@@ -23,7 +23,7 @@ class ActiveShaderDefines(RewriteBase):
     }
 
     def rewrite_source(self, source: str, meta_information: Dict[str, str]) -> List[Tuple[str, Dict[str, str]]]:
-        print("[Active-Shader-Defines] Rewriter started!")
+        vprint1("[Active-Shader-Defines] Rewriter started!")
         iterator = self.find_shader_keyword.finditer(source)
         for match in iterator:
             for shaderType in match.group(1).split(','):

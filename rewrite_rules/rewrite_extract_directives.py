@@ -12,7 +12,7 @@ class ExtractDirectives(RewriteBase):
     def rewrite_source(self, source: str, meta_information: Dict[str, str]) -> List[Tuple[str, Dict[str, str]]]:
 
         reconstruction = ''
-        directives = ''
+        directives = {}
         directives_meta = deepcopy(meta_information)
         directives_meta['location'] = meta_information['location'] + '.directives'
 
@@ -21,8 +21,11 @@ class ExtractDirectives(RewriteBase):
             match = self.matcher.match(line)
             if match is not None:
                 vprint1(f"[Directives] found directive {line}")
-                directives += match.group(1)+'\n'
+                state = match.group(1).split(' ')
+                directives[state[0]] = state[1:]
             else:
                 reconstruction += line
+
+        directives = '\n'.join([' '.join([k] + v) for k, v in directives.items()])
 
         return [(reconstruction, meta_information), (directives, directives_meta)]
