@@ -88,10 +88,10 @@ class Variant(RewriteBase):
 
         for k, v in sources.items():
             if k == "default":
-                table += [(v, meta_information)]
+                table += [(k + '\n' + v, meta_information)]
             else:
                 meta = deepcopy(meta_information)
                 meta['location'] = base_name[0] + "." +k +"." + base_name[1]
-                table += [(v, meta)]
+                table += [(k + '\n' + v, meta)]
 
         return table
