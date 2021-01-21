@@ -2,7 +2,7 @@
 Delete Files that have mismatching SHA1-dependencies
 
 Usage:
- lgncleancache <folder>... [-D defines ...] [-I includes ...] [options] [-v | -vv | -vvv]
+ lgncleancache <folder>... [-I includes ...] [options]
 
 Options:
   -I ...                        additional includes
