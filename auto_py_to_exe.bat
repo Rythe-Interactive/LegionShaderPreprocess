@@ -1,1 +1,2 @@
-start pyinstaller --distpath "./output/" --noconfirm --onefile --console --icon "./icon.ico" --name "lgnspre" --add-data "./LICENSE.MIT;." --add-data "./README.md;."  "./main.py"
+start pyinstaller --distpath "./output/" --noconfirm --console --icon "./icon.ico" --name "lgnspre" --add-data "./LICENSE.MIT;." --add-data "./README.md;."  "./main.py"
+start pyinstaller --distpath "./output/" --noconfirm --console --icon "./icon.ico" --name "lgncleancache" --add-data "./LICENSE.MIT;." --add-data "./README.md;."  "./cleancache.py"
