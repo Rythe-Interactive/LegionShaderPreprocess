@@ -3,7 +3,7 @@ import re
 from typing import List
 import os.path
 
-rgx = re.compile(r"\/\/\s!SHA1Marker\s\%\%([a-fA-F0-9]+)\s\*(.+)\%\%")
+rgx = re.compile(r".*\/\/\s!SHA1Marker\s\%\%([a-fA-F0-9]+)\s\*(.+)\%\%.*")
 
 
 def sha1sum(contents: bytes) -> str:
@@ -20,7 +20,6 @@ def sha1search(contents: List[str], searchPaths: List[str]) -> bool:
         if match is not None:
             sha = match.group(1)
             loc = match.group(2)
-
             found = False
             for searchPath in searchPaths:
                 try:

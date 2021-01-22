@@ -20,8 +20,8 @@ searchPaths = ['.']
 
 
 def check(path):
-    with open(path) as file:
-        return sha1search(file.readlines(), searchPaths)
+    with open(path, 'rb') as file:
+        return sha1search([ln.decode('utf-8',errors='ignore') for ln in file.readlines()], searchPaths)
 
 
 def visit_folder(folder, ext: Optional[str]):
