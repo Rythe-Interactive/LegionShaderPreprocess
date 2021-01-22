@@ -18,7 +18,7 @@ class ExtractDirectives(RewriteBase):
         first_line = True
         for line in source.splitlines(keepends=True):
             if first_line:
-                directives[line.strip()] = ['']
+                directives[line.strip()] = []
                 vprint2(f"[Directives] found variant {line}")
                 first_line = False
             match = self.matcher.match(line)
