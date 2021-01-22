@@ -5,6 +5,7 @@ from rewrite_rules import RewriteBase
 import re
 from vprint import vprint1, vprint2
 
+
 class Variant(RewriteBase):
     matcher = re.compile(r"\s*variant\s*\(([A-z_][A-z0-9_,\s]+)\)")
 
@@ -40,11 +41,10 @@ class Variant(RewriteBase):
                 # this should not end up in the shaders
                 continue
 
-            if delete_next_curly_open and line.startswith('{'):
+            if delete_next_curly_open and line.count('{') != 0:
                 delete_next_curly_open = False
-                line = line.strip().strip('{')
+                line = line.replace('{', '', 1).strip()
                 bc = 1
-
 
             if active_variants is None:
                 vprint2("[Variants] Without active variant")
@@ -91,7 +91,7 @@ class Variant(RewriteBase):
                 table += [(v, meta_information)]
             else:
                 meta = deepcopy(meta_information)
-                meta['location'] = base_name[0] + "." +k +"." + base_name[1]
+                meta['location'] = base_name[0] + "." + k + "." + base_name[1]
                 table += [(v, meta)]
 
         return table
