@@ -48,7 +48,7 @@ def amalgamate(param, filename):
         if match is not None:
             identifier = lookup.get(match.group(1).lower(), 0)
             onesource += str(identifier) + '\n'
-            onesource += str(len(source.encode('utf-8'))) + '\n'
+            onesource += str(len(source)) + '\n'
             onesource += source
 
     return [(onesource, filename + '.onefile')]
